@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +32,9 @@ import com.example.fragments.Model.Film.FavFilmResponse;
 import com.example.fragments.Model.Film.Film;
 import com.example.fragments.Model.Film.searchFilmModel;
 import com.example.fragments.Model.List.List;
+import com.example.fragments.Model.List.ListModel;
 import com.example.fragments.Recyclers.AddMovieListsRecyclerViewAdapter;
+import com.example.fragments.Recyclers.SearchMovieRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -41,7 +44,9 @@ import retrofit2.Response;
 
 
 public class DetailFragment extends Fragment {
-
+    boolean isFavoriteMovie = false;
+    ArrayList<List> arrayList = new ArrayList<List>();
+    RecyclerView recyclerView;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -65,7 +70,38 @@ public class DetailFragment extends Fragment {
         txtDetailTitle.setText(film.getOriginal_title());
         txtDetailDesc.setText(film.getOverview());
 
+        // Setea si es favorito
+        //#region ApiCalll GetFavorites
+        ApiCall apiCall = retrofit.create(ApiCall.class);
+        Call<searchFilmModel> call = apiCall.getFavorites(API_KEY, SESSION_ID);
 
+        call.enqueue(new Callback<searchFilmModel>(){
+            @Override
+            public void onResponse(Call<searchFilmModel> call, Response<searchFilmModel> response) {
+                if(response.code()!=200){
+                    Log.i("MoviesListFragment", "error");
+                    return;
+                } else {
+                    Log.i("MoviesListFragment", "bien");
+                    ArrayList<Film> arraySearch = new ArrayList<>();
+                    arraySearch = response.body().getResults();
+                    if(arraySearch.size() != 0) {
+                        for (Film f : arraySearch) {
+                            if (film.getId() == f.getId()) {
+                                btnFav.setImageResource(R.drawable.ic_fav_on);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<searchFilmModel> call, Throwable t) {
+                Log.i("MoviesListFragment", "error");
+            }
+        });
+        //#endregion ApiCalll GetFavorites
 
         GlideApp.with(getContext())
                 .load(BASE_IMG_URL + film.getPoster_path())
@@ -125,56 +161,37 @@ public class DetailFragment extends Fragment {
 
         dialog.show();
 
+        recyclerView = alertCustomdialog.findViewById(R.id.recyclerList);
 
-        ArrayList<List> arrayList = new ArrayList<List>();
-        arrayList.add(new List("Comedia", 8));
-        arrayList.add(new List("Ciència", 8));
-        arrayList.add(new List("Terror", 8));
-        arrayList.add(new List("Comedia", 8));
-        arrayList.add(new List("Ciència", 8));
-        arrayList.add(new List("Terror", 8));
-        arrayList.add(new List("Comedia", 8));
-        arrayList.add(new List("Ciència", 8));
-        arrayList.add(new List("Terror", 8));
-
-
-        RecyclerView recyclerView = alertCustomdialog.findViewById(R.id.recyclerList);
-        AddMovieListsRecyclerViewAdapter adapter = new AddMovieListsRecyclerViewAdapter(arrayList, getContext());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    public boolean isFavorite(Film film){
-        boolean isFavoriteMovie = false;
+        //#region ApiCall getLists
         ApiCall apiCall = retrofit.create(ApiCall.class);
-        Call<searchFilmModel> call = apiCall.getFavorites(API_KEY, SESSION_ID);
+        Call<ListModel> call = apiCall.getLists(API_KEY, SESSION_ID);
 
-        call.enqueue(new Callback<searchFilmModel>(){
+        call.enqueue(new Callback<ListModel>(){
             @Override
-            public void onResponse(Call<searchFilmModel> call, Response<searchFilmModel> response) {
+            public void onResponse(Call<ListModel> call, Response<ListModel> response) {
                 if(response.code()!=200){
-                    Log.i("MoviesListFragment", "error");
+                    Log.i("ListFragment", "error");
                     return;
-                } else {
-                    Log.i("MoviesListFragment", "bien");
-                    ArrayList<Film> arraySearch = new ArrayList<>();
-                    arraySearch = response.body().getResults();
-                    if(arraySearch.size() != 0) {
-                        for (Film f : arraySearch) {
-                            if (film.getId() == f.getId()) {
-                                isFavoriteMovie = true;
-                                return;
-                            }
-                        }
-                    }
+                }else {
+                    Log.i("ListFragment", "bien");
+                    arrayList = response.body().getResults();
+                    callRecycler(arrayList);
+                    Log.i("ListFragment results", "length: " + arrayList.size());
                 }
             }
 
             @Override
-            public void onFailure(Call<searchFilmModel> call, Throwable t) {
+            public void onFailure(Call<ListModel> call, Throwable t) {
                 Log.i("MoviesListFragment", "error");
             }
         });
-        return isFavoriteMovie;
+        //#endregion ApiCall getLists
+
+    }
+    public void callRecycler(ArrayList<List> arrayList){
+        AddMovieListsRecyclerViewAdapter adapter = new AddMovieListsRecyclerViewAdapter(arrayList, getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }
