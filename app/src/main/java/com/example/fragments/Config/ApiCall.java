@@ -4,6 +4,7 @@ import com.example.fragments.Model.Film.FavFilmRequest;
 import com.example.fragments.Model.Film.FavFilmResponse;
 import com.example.fragments.Model.List.List;
 import com.example.fragments.Model.List.ListAddItemRequest;
+import com.example.fragments.Model.List.ListDetails;
 import com.example.fragments.Model.List.ListModel;
 import com.example.fragments.Model.List.ListRequest;
 import com.example.fragments.Model.List.ListResponse;
@@ -25,6 +26,12 @@ public interface ApiCall {
 
     @GET("account/{account_id}/lists?")
     Call<ListModel> getLists(@Query("api_key") String api_key, @Query("session_id") String session_id);
+
+    @GET("list/{list_id}?")
+    Call<ListDetails> getMoviesOfList(@Query("list_id") String list_id, @Query("api_key") String api_key);
+
+    /*@GET("list/8195345?api_key=4e1080967ee9a36d94e4cd323d6c8de5")
+    Call<ListDetails> getMoviesOfList();*/
 
     @POST("account/{account_id}/favorite?")
     Call<FavFilmResponse> setFavorite(@Query("account_id") String account_id, @Query("api_key") String api_key, @Query("session_id") String session_id, @Body FavFilmRequest request);

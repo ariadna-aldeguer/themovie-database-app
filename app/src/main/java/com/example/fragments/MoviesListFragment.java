@@ -1,6 +1,5 @@
 package com.example.fragments;
 
-import static com.example.fragments.Config.DefaultConstants.ACCOUNT_ID;
 import static com.example.fragments.Config.DefaultConstants.API_KEY;
 import static com.example.fragments.Config.DefaultConstants.SESSION_ID;
 import static com.example.fragments.Config.DefaultConstants.retrofit;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -19,10 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.fragments.Config.ApiCall;
-import com.example.fragments.Model.Film.FavFilmResponse;
 import com.example.fragments.Model.Film.Film;
 import com.example.fragments.Model.Film.searchFilmModel;
-import com.example.fragments.Recyclers.ListFavoritesRecylerViewAdapter;
 import com.example.fragments.Recyclers.SearchMovieRecyclerViewAdapter;
 
 import java.util.ArrayList;

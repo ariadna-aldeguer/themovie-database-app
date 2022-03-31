@@ -28,6 +28,7 @@ import com.example.fragments.Model.Film.FavFilmResponse;
 import com.example.fragments.Model.Film.Film;
 import com.example.fragments.Model.Film.searchFilmModel;
 import com.example.fragments.Model.List.List;
+import com.example.fragments.Model.List.ListDetails;
 import com.example.fragments.Model.List.ListModel;
 import com.example.fragments.Model.List.ListRequest;
 import com.example.fragments.Model.List.ListResponse;
@@ -46,6 +47,7 @@ public class ListFragment extends Fragment {
     TextView txtList, txtDescription;
     public View view;
     RecyclerView recyclerView;
+    ArrayList<List> arrayList = new ArrayList<>();
 
     public ListFragment() {
         // Required empty public constructor
@@ -124,47 +126,9 @@ public class ListFragment extends Fragment {
         });
     }
 
-    /*public void showDialogPelis(){
-        View alertCustomdialog = getLayoutInflater().inflate( R.layout.form_movie_to_list, null);
 
-        //initialize alert builder.
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
-        //set our custom alert dialog to tha alertdialog builder
-        alert.setView(alertCustomdialog);
 
-        final AlertDialog dialog = alert.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        dialog.show();
-
-        recyclerView = alertCustomdialog.findViewById(R.id.recyclerList);
-
-        //#region ApiCall getLists
-        ApiCall apiCall = retrofit.create(ApiCall.class);
-        Call<ListModel> call = apiCall.getLists(API_KEY, SESSION_ID);
-
-        call.enqueue(new Callback<ListModel>(){
-            @Override
-            public void onResponse(Call<ListModel> call, Response<ListModel> response) {
-                if(response.code()!=200){
-                    Log.i("ListFragment", "error");
-                    return;
-                }else {
-                    Log.i("ListFragment", "bien");
-                    arrayList = response.body().getResults();
-                    callRecyclerMovies(arrayList);
-                    Log.i("ListFragment results", "length: " + arrayList.size());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListModel> call, Throwable t) {
-                Log.i("MoviesListFragment", "error");
-            }
-        });
-        //#endregion ApiCall getLists
-    }*/
     public void createList(String name, String description){
         ListRequest request = new ListRequest(name, description);
         ApiCall apiCall = retrofit.create(ApiCall.class);
