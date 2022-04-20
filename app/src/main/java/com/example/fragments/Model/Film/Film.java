@@ -9,6 +9,7 @@ public class Film implements Serializable {
     public int id;
     public String overview;
     public String release_date;
+    public boolean isFavorite = false;
 
     public String getOriginal_title() {
         return original_title;
@@ -33,4 +34,6 @@ public class Film implements Serializable {
     public String getRelease_date() {
         return release_date;
     }
+
+    public boolean getIsFavorite() { return isFavorite; }
 }

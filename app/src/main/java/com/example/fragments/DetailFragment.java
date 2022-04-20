@@ -88,6 +88,7 @@ public class DetailFragment extends Fragment {
                     if(arraySearch.size() != 0) {
                         for (Film f : arraySearch) {
                             if (film.getId() == f.getId()) {
+                                film.isFavorite = true;
                                 btnFav.setImageResource(R.drawable.ic_fav_on);
                                 return;
                             }
@@ -111,8 +112,15 @@ public class DetailFragment extends Fragment {
         btnFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnFav.setImageResource(R.drawable.ic_fav_on);
-                FavFilmRequest request = new FavFilmRequest(film.getId(), true);
+                if(film.isFavorite){
+                    film.isFavorite = false;
+                    btnFav.setImageResource(R.drawable.ic_fav_off);
+                } else {
+                    film.isFavorite = true;
+                    btnFav.setImageResource(R.drawable.ic_fav_on);
+                }
+
+                FavFilmRequest request = new FavFilmRequest(film.getId(), film.getIsFavorite());
                 ApiCall apiCall = retrofit.create(ApiCall.class);
                 Call<FavFilmResponse> call = apiCall.setFavorite(ACCOUNT_ID, API_KEY, SESSION_ID, request);
 
