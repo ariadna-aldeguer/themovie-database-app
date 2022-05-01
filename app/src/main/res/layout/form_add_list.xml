@@ -64,7 +64,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="32dp"
         android:backgroundTint="#FFFFFF"
-        android:text="Button"
+        android:text="Add list"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -47,6 +47,8 @@ public class DetailFragment extends Fragment {
     boolean isFavoriteMovie = false;
     ArrayList<List> arrayList = new ArrayList<List>();
     RecyclerView recyclerView;
+    int media_id;
+    AlertDialog dialogList;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -60,6 +62,7 @@ public class DetailFragment extends Fragment {
 
         Bundle bundle = getArguments();
         Film film = (Film) bundle.getSerializable("Film");
+        media_id = film.getId();
 
         TextView txtDetailTitle = view.findViewById(R.id.txtDetailTitle);
         TextView txtDetailDesc = view.findViewById(R.id.txtDetailDesc);
@@ -164,10 +167,10 @@ public class DetailFragment extends Fragment {
         //set our custom alert dialog to tha alertdialog builder
         alert.setView(alertCustomdialog);
 
-        final AlertDialog dialog = alert.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogList = alert.create();
+        dialogList.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        dialog.show();
+        dialogList.show();
 
         recyclerView = alertCustomdialog.findViewById(R.id.recyclerList);
 
@@ -179,10 +182,10 @@ public class DetailFragment extends Fragment {
             @Override
             public void onResponse(Call<ListModel> call, Response<ListModel> response) {
                 if(response.code()!=200){
-                    Log.i("ListFragment", "error");
+                    Log.i("DetailFragment", "error");
                     return;
                 }else {
-                    Log.i("ListFragment", "bien");
+                    Log.i("DetailFragment", "bien");
                     arrayList = response.body().getResults();
                     callRecycler(arrayList);
                     Log.i("ListFragment results", "length: " + arrayList.size());
@@ -198,7 +201,7 @@ public class DetailFragment extends Fragment {
 
     }
     public void callRecycler(ArrayList<List> arrayList){
-        AddMovieListsRecyclerViewAdapter adapter = new AddMovieListsRecyclerViewAdapter(arrayList, getContext());
+        AddMovieListsRecyclerViewAdapter adapter = new AddMovieListsRecyclerViewAdapter(arrayList, getContext(),media_id, dialogList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

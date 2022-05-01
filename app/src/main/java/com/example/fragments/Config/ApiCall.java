@@ -2,6 +2,7 @@ package com.example.fragments.Config;
 
 import com.example.fragments.Model.Film.FavFilmRequest;
 import com.example.fragments.Model.Film.FavFilmResponse;
+import com.example.fragments.Model.List.AddListResponse;
 import com.example.fragments.Model.List.List;
 import com.example.fragments.Model.List.ListAddItemRequest;
 import com.example.fragments.Model.List.ListDetails;
@@ -14,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiCall {
@@ -40,5 +42,5 @@ public interface ApiCall {
     Call<ListResponse> postList(@Query("api_key") String api_key, @Query("session_id") String session_id, @Body ListRequest request);
 
     @POST("list/{list_id}/add_item?")
-    Call<ListResponse> addItem(@Query("list_id") int list_id, @Query("api_key") String api_key, @Query("session_id") String session_id, @Body ListAddItemRequest request);
+    Call<AddListResponse> addItem(@Path("list_id") int list_id, @Query("api_key") String api_key, @Query("session_id") String session_id, @Body ListAddItemRequest request);
 }
